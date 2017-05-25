@@ -1,0 +1,40 @@
+---
+version: '2.0'
+metadata:
+  apiVersion: '2016-03-04'
+  endpointPrefix: bws
+  jsonVersion: '1.1'
+  serviceFullName: BWS Service
+  signatureVersion: v4
+  targetPrefix: bws
+  protocol: query-json
+
+operations:
+
+  CreateBandWidthShare:
+    http:
+      method: GET
+
+  DescribeBandWidthShares:
+    http:
+      method: GET
+
+  AssociateBandWidthShare:
+    http:
+      method: GET
+
+  DisassociateBandWidthShare:
+    http:
+      method: GET
+
+  ModifyBandWidthShare:
+    http:
+      method: GET
+
+  DeleteBandWidthShare:
+    http:
+      method: GET
+
+  BatchAssociateBandWidthShare:
+    http:
+      method: GET
