@@ -1,0 +1,318 @@
+---
+version: '2.0'
+metadata:
+  apiVersion: '2017-03-28'
+  endpointPrefix: kog
+  jsonVersion: '1.1'
+  serviceFullName: Kog Service
+  signatureVersion: v4
+  targetPrefix: kog
+  # protocol: query-json
+  protocol: json
+
+operations:
+
+  # === 1. AKSK related APIs ===
+  AddAksk:
+    http:
+      method: POST
+
+  DeleteAksk:
+    http:
+      method: DELETE
+    input:
+      shape: RecordId
+
+  EditAksk:
+    http:
+      method: PATCH
+    input:
+      shape: RecordId
+
+  GetAkskList:
+    http:
+      method: GET
+    protocol: query-json
+
+  GetAksk:
+    http:
+      method: GET
+    input:
+      shape: RecordId
+
+  DumpAkskResourceData:
+    http:
+      method: POST
+    input:
+      shape: RecordId
+
+  # === 2. Cloud Server related APIs ===
+  AddCloudServer:
+    http:
+      method: POST
+
+  BatchDeleteCloudServer:
+    http:
+      method: POST
+    input:
+      shape: RecordIdList
+
+  GetCloudServerList:
+    http:
+      method: GET
+    protocol: query-json
+
+  GetCloudServer:
+    http:
+      method: GET
+    input:
+      shape: RecordId
+
+  StartCloudServer:
+    http:
+      method: POST
+    input:
+      shape: RecordIdList
+
+  StopCloudServer:
+    http:
+      method: POST
+    input:
+      shape: RecordIdList
+
+  RebootCloudServer:
+    http:
+      method: POST
+    input:
+      shape: RecordIdList
+
+  ReinstallCloudServer:
+    http:
+      method: POST
+    input:
+      shape: RecordId
+
+  GetCloudServerImageList:
+    http:
+      method: GET
+    # input:
+    #   shape: RecordId
+    protocol: query-json
+
+  # === 3. EIP related APIs ===
+  AddEip:
+    http:
+      method: POST
+
+  BatchDeleteEip:
+    http:
+      method: POST
+    input:
+      shape: RecordIdList
+
+  GetEipList:
+    http:
+      method: GET
+    protocol: query-json
+
+  GetEip:
+    http:
+      method: GET
+    input:
+      shape: RecordId
+
+  EipBindCloudServer:
+    http:
+      method: POST
+
+  EipUnbindCloudServer:
+    http:
+      method: POST
+    input:
+      shape: RecordId
+
+  # === 4. BWS related APIs ===
+  AddBws:
+    http:
+      method: POST
+
+  BatchDeleteBws:
+    http:
+      method: POST
+    input:
+      shape: RecordIdList
+
+  GetBwsList:
+    http:
+      method: GET
+    protocol: query-json
+
+  GetBws:
+    http:
+      method: GET
+    input:
+      shape: RecordId
+
+  EditBws:
+    http:
+      method: PATCH
+    input:
+      shape: RecordId
+
+  BwsBindEip:
+    http:
+      method: POST
+
+  BwsUnbindEip:
+    http:
+      method: POST
+
+  # === 5. Label related APIs ===
+  AddCloudServerLabel:
+    http:
+      method: POST
+
+  AddEipLabel:
+    http:
+      method: POST
+
+  AddBwsLabel:
+    http:
+      method: POST
+
+  AlterCloudServerLabel:
+    http:
+      method: POST
+
+  AlterEipLabel:
+    http:
+      method: POST
+
+  AlterBwsLabel:
+    http:
+      method: POST
+
+  GetCloudServerListByLabel:
+    http:
+      method: GET
+    protocol: query-json
+
+  GetEipListByLabel:
+    http:
+      method: GET
+    protocol: query-json
+
+  GetBwsListByLabel:
+    http:
+      method: GET
+    protocol: query-json
+
+  # === others ===
+  GetImageList:
+    http:
+      method: GET
+    protocol: query-json
+
+  GetSubnetList:
+    http:
+      method: GET
+    protocol: query-json
+
+  GetLineList:
+    http:
+      method: GET
+    protocol: query-json
+
+  GetSecurityGroupList:
+    http:
+      method: GET
+    protocol: query-json
+
+  GetNetworkInterfaceList:
+    http:
+      method: GET
+    protocol: query-json
+
+  GetRegionList:
+    http:
+      method: GET
+    protocol: query-json
+
+
+# =======================================================
+# =================== variable definition ===============
+# =======================================================
+
+shapes:
+
+  UuidFormat:
+    type: string
+    min: 36
+    max: 36
+
+  UuidFormatList:
+    type: list
+    members:
+      shape: UuidFormat
+
+  # eg: {"id: "xxx"}
+  RecordId:
+    type: structure
+    required:
+    - id
+    members:
+      id:
+        shape: UuidFormat
+        documentation: "a record id"
+
+  # eg: {"id: ["xxx", "xxx"]}
+  RecordIdList:
+    type: structure
+    required:
+    - id:
+        shapre: UuidFormatList
+
+  # eg: {"cloud_server: "xxx"}
+  CloudServerId:
+    type: structure
+    required:
+    - cloud_server
+    members:
+      cloud_server:
+        shape: UuidFormat
+
+  # eg: {"eip: "xxx"}
+  EipId:
+    type: structure
+    required:
+    - eip
+    members:
+      eip:
+        shape: UuidFormat
+
+  # eg: {"bws: "xxx"}
+  BwsId:
+    type: structure
+    required:
+    - bws
+    members:
+      bws:
+        shape: UuidFormat
+
+  # eg: {"image: "xxx"}
+  ImageId:
+    type: structure
+    required:
+    - image
+    members:
+      image:
+        shape: UuidFormat
+
+  # eg: {"network_interface: "xxx"}
+  NetworkInterfaceId:
+    type: structure
+    required:
+    - network_interface
+    members:
+      network_interface:
+        shape: UuidFormat
