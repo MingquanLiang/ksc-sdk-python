@@ -27,7 +27,7 @@ operations:
     http:
       method: PATCH
     input:
-      shape: RecordId
+      shape: EditAkskRecord
 
   GetAkskList:
     http:
@@ -39,6 +39,7 @@ operations:
       method: GET
     input:
       shape: RecordId
+    protocol: query-json
 
   DumpAkskResourceData:
     http:
@@ -67,6 +68,7 @@ operations:
       method: GET
     input:
       shape: RecordId
+    protocol: query-json
 
   StartCloudServer:
     http:
@@ -90,7 +92,7 @@ operations:
     http:
       method: POST
     input:
-      shape: RecordId
+      shape: ReinstallCloudServerRecord
 
   GetCloudServerImageList:
     http:
@@ -120,6 +122,7 @@ operations:
       method: GET
     input:
       shape: RecordId
+    protocol: query-json
 
   EipBindCloudServer:
     http:
@@ -152,6 +155,7 @@ operations:
       method: GET
     input:
       shape: RecordId
+    protocol: query-json
 
   EditBws:
     http:
@@ -171,26 +175,38 @@ operations:
   AddCloudServerLabel:
     http:
       method: POST
+    input:
+      shape: AddLabelStructure
 
   AddEipLabel:
     http:
       method: POST
+    input:
+      shape: AddLabelStructure
 
   AddBwsLabel:
     http:
       method: POST
+    input:
+      shape: AddLabelStructure
 
   AlterCloudServerLabel:
     http:
       method: POST
+    input:
+      shape: AlterLabelStructure
 
   AlterEipLabel:
     http:
       method: POST
+    input:
+      shape: AlterLabelStructure
 
   AlterBwsLabel:
     http:
       method: POST
+    input:
+      shape: AlterLabelStructure
 
   GetCloudServerListByLabel:
     http:
@@ -244,6 +260,10 @@ operations:
 # =======================================================
 
 shapes:
+  BaseString:
+    type: string
+    min: 1
+    max: 100
 
   UuidFormat:
     type: string
@@ -252,7 +272,7 @@ shapes:
 
   UuidFormatList:
     type: list
-    members:
+    member:
       shape: UuidFormat
 
   # eg: {"id: "xxx"}
@@ -269,8 +289,11 @@ shapes:
   RecordIdList:
     type: structure
     required:
-    - id:
-        shapre: UuidFormatList
+    - id
+    members:
+      id:
+        shape: UuidFormatList
+        documentation: "a record id list"
 
   # eg: {"cloud_server: "xxx"}
   CloudServerId:
@@ -316,3 +339,67 @@ shapes:
     members:
       network_interface:
         shape: UuidFormat
+
+  EditAkskRecord:
+    type: structure
+    required:
+    - id
+    members:
+      id:
+        shape: UuidFormat
+        documentation: "a record id"
+      name:
+        shape: BaseString
+      access_key_id:
+        shape: BaseString
+      secret_access_key:
+        shape: BaseString
+
+  ReinstallCloudServerRecord:
+    type: structure
+    required:
+    - id
+    - image
+    - instance_password
+    members:
+      id:
+        shape: UuidFormat
+        documentation: "a cloud server record id"
+      image:
+        shape: UuidFormat
+        documentation: "a image id"
+      instance_password:
+        shape: BaseString
+        documentation: "a image id"
+
+  AddLabelStructure:
+    type: structure
+    required:
+    - id
+    - name
+    members:
+      id:
+        shape: UuidFormatList
+        documentation: "a resource record id list"
+      name:
+        shape: BaseString
+        documentation: "label name"
+      label_type:
+        shape: BaseString
+        documentation: "label type, choices are 'owner', 'share', 'user_defined'"
+
+  AlterLabelStructure:
+    type: structure
+    required:
+    - id
+    - name
+    members:
+      id:
+        shape: UuidFormatList
+        documentation: "a resource record id list"
+      name:
+        shape: BaseString
+        documentation: "label name"
+      label_type:
+        shape: BaseString
+        documentation: "label type, choices are 'owner', 'share', 'user_defined'"
