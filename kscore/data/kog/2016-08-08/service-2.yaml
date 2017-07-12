@@ -33,6 +33,7 @@ operations:
       method: GET
     input:
       shape: InstanceId
+    protocol: query-json
 
   # 获取某个项目下的角色
   GetProjectRoles:
@@ -41,6 +42,7 @@ operations:
       method: GET
     input:
       shape: InstanceId
+    protocol: query-json
 
   # 获取某个项目下的分组
   GetProjectGroups:
@@ -49,6 +51,7 @@ operations:
       method: GET
     input:
       shape: InstanceId
+    protocol: query-json
 
   # 获取某个项目下的程序
   GetProjectApplications:
@@ -57,6 +60,7 @@ operations:
       method: GET
     input:
       shape: InstanceId
+    protocol: query-json
 
   # 获取某个项目下的服务器
   GetProjectServers:
@@ -65,6 +69,7 @@ operations:
       method: GET
     input:
       shape: InstanceId
+    protocol: query-json
 
   # 获取某个项目下的操作方法
   GetProjectMethods:
@@ -73,6 +78,7 @@ operations:
       method: GET
     input:
       shape: InstanceId
+    protocol: query-json
 
   # 获取项目数量
   GetProjectCount:
@@ -89,7 +95,8 @@ operations:
       method: GET
     input:
       shape: InstanceId
-    
+    protocol: query-json
+
   # 获取该项目下分组服务器角色的相关信息
   GetProjectAllRelatedInfo:
     name: GetProjectAllRelatedInfo
@@ -153,7 +160,15 @@ operations:
       method: POST
     input:
       shape: CheckProject
-    
+
+  # 获取项目下可用于部署的主机列表
+  GetProjectOpServers:
+    name: GetProjectOpServers
+    http:
+      method: GET
+    input:
+      shape: InstanceId
+    protocol: query-json
 
 # ===== Application-应用程序 APIs =====
 
@@ -236,6 +251,22 @@ operations:
       method: POST
     input:
       shape: ApplicationReview
+
+  # 执行程序部署前预览
+  OpServerApplicationReview:
+    name: OpServerApplicationReview
+    http:
+      method: POST
+    input:
+      shape: OpServerApplicationReview
+
+  # 执行程序部署
+  OpServerApplicationDistribute:
+    name: OpServerApplicationDistribute
+    http:
+      method: POST
+    input:
+      shape: OpServerApplicationDistribute
 
 
 # ==== ApplicationRole-程序包拆分 APIs ====
@@ -365,7 +396,23 @@ operations:
       method: POST
     input:
       shape:  MethodRoleGroup
-    
+
+  # 主机维度- 执行命令
+  OpServerMethodExecute:
+    name: OpServerMethodExecute
+    http:
+      method: POST
+    input:
+      shape: OpServerMethodExecute
+
+  # 主机维度- 执行命令前预览
+  OpServerMethodReview:
+    name: OpServerMethodReview
+    http:
+      method: POST
+    input:
+      shape: OpServerMethodReview
+
 
 # === Role-角色 APIs ===
 
@@ -494,6 +541,15 @@ operations:
       method: GET
     input:
       shape: HistoryLog
+
+  GetHistoryDetail:
+    name: GetHistoryDetail
+    http:
+      method: GET
+    input:
+      shape: InstanceId
+    protocol: query-json
+
     
 
 # ======= Server-服务器 APIs =======
@@ -593,6 +649,14 @@ operations:
       method: PATCH
     input:
       shape: EditServer
+
+  # 检查某个路径是否在某台主机上
+  CheckPathExists:
+    name: CheckPathExists
+    http:
+      method: POST
+    input:
+      shape: CheckPathExists
 
 
 # ==== Package-程序包 APIs ====
@@ -776,6 +840,22 @@ operations:
       method: POST
     input:
       shape: IdMap
+
+  # 主机维度- 执行配置变更
+  OpServerDeploySettingsTemplateDistribute:
+    name: OpServerDeploySettingsTemplateDistribute
+    http:
+      method: POST
+    input:
+      shape: OpServerDeploySettingsTemplateDistribute
+
+  # 主机维度 - 执行变更前预览
+  OpServerDeploySettingsTemplateReview:
+    name: OpServerDeploySettingsTemplateReview
+    http:
+      method: POST
+    input:
+      shape: OpServerDeploySettingsTemplateReview
 
 
 # ==== History-操作历史记录APIs ====
@@ -1139,7 +1219,6 @@ shapes:
         documentation: "Version ID List"
     documentation: ""
 
-
   DeleteApplicationAppRole:
     type: structure
     required:
@@ -1151,7 +1230,44 @@ shapes:
         documentation: "Application ID"
       app_role_id:
         shape: Ids
-        documentation: "Application Role ID"
+        documentation: "Application Role ID List"
+    documentation: ""
+
+  OpServerApplicationDistribute:
+    type: structure
+    required:
+      - id
+      - version
+    members:
+      id:
+        shape: Id
+        documentation: "Application ID"
+      version:
+        shape: Id
+        documentation: "Version ID"
+      server:
+        shape: Ids
+        documentation: "Server ID List"
+      minion:
+        shape: Ids
+        documentation: "Server Minion ID List"
+
+  OpServerApplicationReview:
+    type: structure
+    required:
+      - id
+      - version
+      - server
+    members:
+      id:
+        shape: Id
+        documentation: "Application ID"
+      version:
+        shape: Id
+        documentation: "Version ID"
+      server:
+        shape: Ids
+        documentation: "Server ID List"
     documentation: ""
 
 # === Package Parameters ===
@@ -1368,6 +1484,35 @@ shapes:
         shape: Ids
         documentation: ""
     documentation: ""
+
+  OpServerMethodExecute:
+    type: structure
+    required:
+      - id
+    members:
+      id:
+        shape: Id
+        documentation: "Method ID"
+      server:
+        shape: Ids
+        documentation: "Server ID list"
+      minion:
+        shape: Ids
+        documentation: "minion id list"
+
+  OpServerMethodReview:
+    type: structure
+    required:
+      - id
+      - server
+    members:
+      id:
+        shape: Id
+        documentation: ""
+      server:
+        shape: Ids
+        documentation: ""
+
 
 # === Version Parameters ===
 
@@ -1611,6 +1756,19 @@ shapes:
         documentation: ""
     documentation: ""
 
+  CheckPathExists:
+    type: structure
+    required:
+      - minion
+      - path
+    members:
+      minion:
+        shape: Id
+        documentation: ""
+      path:
+        shape: NonEmptyString
+        documentation: ""
+
 # === AssetRegion Parameters ===
 
   AssetRegion:
@@ -1780,6 +1938,33 @@ shapes:
         documentation: ""
     documentation: ""
 
+  OpServerDeploySettingsTemplateDistribute:
+    type: structure
+    required:
+      - id
+    members:
+      id:
+        shape: Id
+        documentation: "Template ID"
+      server:
+        shape: Ids
+        documentation: "Server ID List"
+      minion:
+        shape: Ids
+        documentation: "Server Minion ID List"
+
+  OpServerDeploySettingsTemplateReview:
+    type: structure
+    required:
+      - id
+      - server
+    members:
+      id:
+        shape: Id
+        documentation: ""
+      server:
+        shape: Ids
+        documentation: ""
 
 # === DeployHistory Parameters ===
 
